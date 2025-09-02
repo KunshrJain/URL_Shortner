@@ -11,7 +11,7 @@ import (
 
 var (
 	globalCounter int = 0
-	urlStore          = make(map[int]string) // ID -> Original URL
+	urlStore          = make(map[int]string) 
 )
 
 type myURL struct {
@@ -21,7 +21,6 @@ type myURL struct {
 	CreationDate time.Time `json:"creation_date"`
 }
 
-// Create a short URL object and store it in memory
 func createShortURL(originalURL string) myURL {
 	globalCounter++
 	id := globalCounter
@@ -35,7 +34,6 @@ func createShortURL(originalURL string) myURL {
 	}
 }
 
-// Handler to generate a short URL (expects ?url=...)
 func createHandler(w http.ResponseWriter, r *http.Request) {
 	original := r.URL.Query().Get("url")
 	if original == "" {
@@ -49,9 +47,7 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(short)
 }
 
-// Handler to redirect from short URL to original
 func redirectHandler(w http.ResponseWriter, r *http.Request) {
-	// Extract the ID from the URL path
 	path := strings.TrimPrefix(r.URL.Path, "/")
 	id, err := strconv.Atoi(path)
 	if err != nil {
@@ -65,14 +61,12 @@ func redirectHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Redirect karne ke liye
 	http.Redirect(w, r, original, http.StatusFound)
 }
 
 func main() {
-	//bhaii yeh sab kuch aur sunega
-	http.HandleFunc("/create", createHandler) // /create ko monitor karega
-	http.HandleFunc("/", redirectHandler)     // / ko monitor karega
+	http.HandleFunc("/create", createHandler) 
+	http.HandleFunc("/", redirectHandler)    
 
 	fmt.Println("Starting URL Shortener...")
 	fmt.Println("Go server running at http://localhost:3000")
@@ -82,3 +76,4 @@ func main() {
 		fmt.Println("Error starting server:", err)
 	}
 }
+
